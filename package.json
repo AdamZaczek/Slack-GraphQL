@@ -1,0 +1,53 @@
+{
+  "name": "slack-graphql",
+  "version": "1.0.0",
+  "description": "Slack GraphQL Example- Integrated with GraphQL, Express, ES6/ES7, Babel",
+  "scripts": {
+    "start": "npm run update && babel-node server/index.js",
+    "update": "./node_modules/.bin/babel-node server/utils/updateSchema.js",
+    "build-server": "./node_modules/.bin/babel ./server --out-dir ./bin && node bin/index.js",
+    "clean": "rm -rf build && mkdir build",
+    "lint": "eslint --ignore-path .gitignore server"
+  },
+  "pre-commit": "lint",
+  "repository": {
+    "type": "git"
+  },
+  "engines": {
+    "node": "6.6.0",
+    "npm": "3.10.8"
+  },
+  "keywords": [
+    "graphql",
+    "express",
+    "es6",
+    "es7",
+    "babel"
+  ],
+  "author": "Adam Żaczek",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^1.1.3",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "2.2.3",
+    "eslint-plugin-react": "^6.8.0",
+    "pre-commit": "^1.2.2"
+  },
+  "dependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "body-parser": "^1.16.0",
+    "cross-env": "^3.1.4",
+    "express": "^4.14.0",
+    "express-graphql": "^0.6.1",
+    "file-loader": "^0.9.0",
+    "graphql": "^0.8.2",
+    "graphql-relay": "^0.4.4",
+    "lodash": "^4.17.4"
+  }
+}
