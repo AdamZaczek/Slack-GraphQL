@@ -19,7 +19,10 @@ const Im = new GraphQLObjectType({
     id: { type: GraphQLString },
     user: { type: GraphQLString },
     created: { type: GraphQLString },
-    isDeleted: { type: GraphQLBoolean },
+    isDeleted: {
+      type: GraphQLBoolean,
+      resolve: root => root.is_user_deleted,
+    },
   })
 });
 
