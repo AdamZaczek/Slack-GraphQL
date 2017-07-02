@@ -16,6 +16,14 @@ const Im = new GraphQLObjectType({
   description: 'This method returns a list of all private conversation channels that the user has',
   fields: () => ({
     id: { type: GraphQLString },
+    conversation: {
+      type: new GraphQLList(Message),
+      resolve: (root, args, { slackToken }) => {
+        return fetch(`https://slack.com/api/im.history?token=${slackToken}&channel=${root.id}&pretty=1`)
+        	.then(res => res.json())
+        	.then(res => res.messages);
+      },
+    },
     user: {
       type: User,
       resolve: (root, args, { slackToken }) => {
@@ -28,6 +36,24 @@ const Im = new GraphQLObjectType({
     isDeleted: {
       type: GraphQLBoolean,
       resolve: root => root.is_user_deleted,
+    },
+  }),
+});
+
+const Message = new GraphQLObjectType({
+  name: 'Message',
+  description: 'Private message exchanged with a Slack channel member',
+  fields: () => ({
+    type: { type: GraphQLString },
+    ts: { type: GraphQLString },
+    text: { type: GraphQLString },
+    user: {
+      type: User,
+      resolve: (root, args, { slackToken }) => {
+        return fetch(`https://slack.com/api/users.info?token=${slackToken}&user=${root.user}&pretty=1`)
+        	.then(res => res.json())
+        	.then(res => res.user);
+      },
     },
   }),
 });
@@ -58,13 +84,6 @@ const Query = new GraphQLObjectType({
   name: 'SlackAPI',
   description: 'Root of the Profile',
   fields: () => ({
-    helloQuery: {
-      type: GraphQLString,
-      description: 'Our first query field!',
-      resolve: () => {
-        return 'Hello from GraphiQL';
-      }
-    },
     ims: {
       type: new GraphQLList(Im),
       description: 'Returns list of private messages',
@@ -78,7 +97,7 @@ const Query = new GraphQLObjectType({
 });
 
 const Schema = new GraphQLSchema({
-  query: Query
+  query: Query,
 });
 
 export default Schema;
