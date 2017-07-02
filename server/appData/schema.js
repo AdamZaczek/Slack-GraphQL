@@ -11,19 +11,47 @@ import {
 
 import fetch from 'node-fetch';
 
-
 const Im = new GraphQLObjectType({
   name: 'Im',
   description: 'This method returns a list of all private conversation channels that the user has',
   fields: () => ({
     id: { type: GraphQLString },
-    user: { type: GraphQLString },
+    user: {
+      type: User,
+      resolve: (root, args, { slackToken }) => {
+        return fetch(`https://slack.com/api/users.info?token=${slackToken}&user=${root.user}&pretty=1`)
+        	.then(res => res.json())
+        	.then(res => res.user);
+      }
+    },
     created: { type: GraphQLString },
     isDeleted: {
       type: GraphQLBoolean,
       resolve: root => root.is_user_deleted,
     },
-  })
+  }),
+});
+
+const User = new GraphQLObjectType({
+  name: 'User',
+  description: 'Represents user we talk with',
+  fields: () => ({
+    id: { type: GraphQLString },
+    name: { type: GraphQLString },
+    deleted: { type: GraphQLString },
+    real_name: {
+      type: GraphQLString,
+      resolve: root => root.profile.real_name,
+    },
+    image_192: {
+      type: GraphQLString,
+      resolve: root => root.profile.image_192,
+    },
+    email: {
+      type: GraphQLString,
+      resolve: root => root.profile.email,
+    },
+  }),
 });
 
 const Query = new GraphQLObjectType({
@@ -46,7 +74,7 @@ const Query = new GraphQLObjectType({
         	.then(res => res.ims);
       },
     },
-  })
+  }),
 });
 
 const Schema = new GraphQLSchema({
