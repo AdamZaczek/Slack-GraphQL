@@ -4,7 +4,7 @@ import graphQLHTTP from 'express-graphql';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 import config from './config/environment';
-import schema from './appData/schema';
+import schema from './schema/schema';
 import slackToken from '../env';
 
 if (config.env === 'development') {
