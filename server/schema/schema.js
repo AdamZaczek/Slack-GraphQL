@@ -9,11 +9,52 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
+import DataLoader from 'dataloader';
 import fetch from 'node-fetch';
 
 import Im from './ImType';
 import Message from './MessageType';
 import User from './UserType';
+
+// const userLoader = new DataLoader()
+
+const createLoaders = (fetchFn) => {
+ return {
+   User: new DataLoader(async (keys) => {
+     return Promise.all(keys.map(async () => {
+       const response = await fetchFn(‘get’, `/api/user`);
+
+       return await response.json();
+     }));
+   }),
+   Counters: new DataLoader((keys) => {
+     return Promise.all(keys.map(async (id) => {
+       const response = await fetchFn('get', `/api/counters/${id}`;
+
+       return await response.json();
+     });
+   })
+}
+
+
+// export default function createLoaders(fetchFn) {
+//  return {
+//    User: new DataLoader(async (keys) => {
+//      return Promise.all(keys.map(async () => {
+//        const response = await fetchFn(‘get’, `/api/user`);
+//
+//        return await response.json();
+//      }));
+//    }),
+//    Counters: new DataLoader((keys) => {
+//      return Promise.all(keys.map(async (id) => {
+//        const response = await fetchFn('get', `/api/counters/${id}`;
+//
+//        return await response.json();
+//      });
+//    })
+// }
+
 
 const Query = new GraphQLObjectType({
   name: 'SlackAPI',
